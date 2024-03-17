@@ -30,6 +30,29 @@ namespace Application.Infra.Repository
             }
         }
 
+        public async Task<IEnumerable<User>> GetAllUsers()
+        {
+            try
+            {
+                var talkToUsers = await _context.User
+      .Include(u => u.IdentityUser)
+      .AsNoTracking()
+      .Select(u => new User
+      {
+          Id = u.Id,
+          Name = u.IdentityUser.UserName,
+          DataCreated = u.DataCreated,
+          IsActive = u.IsActive,
+      })
+      .ToListAsync();
+                return talkToUsers;
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error getting TalkToUsers by User ID.", ex);
+            }
+        }
+
         public async Task<User> GetUserById(string id)
         {
             try

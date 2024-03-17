@@ -11,10 +11,7 @@ namespace Application.Infra
         public DbSet<Talk> Talks { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<User> User { get; set; }
-        public DbSet<TalkToUser> TalksToUsers
-        {
-            get; set;
-        }
+        public DbSet<TalkToUser> TalksToUsers{get; set;}
 
         public DbSet<MessageTallkToUser> MessageTallkToUsers { get; set; }
         public AppDbContext(DbContextOptions options) : base(options)

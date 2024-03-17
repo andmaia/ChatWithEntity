@@ -37,6 +37,7 @@ namespace Application.Infra.Repository
             try
             {
                 var talkToUsers = await _context.TalksToUsers
+                    .Include(t=>t.User)
                     .Where(tu => tu.IdTalk == id)
                     .ToListAsync();
 
@@ -53,6 +54,7 @@ namespace Application.Infra.Repository
             try
             {
                 var talkToUsers = await _context.TalksToUsers
+                    .Include(t=>t.User)
                     .Where(tu => tu.IdUser == id)
                     .ToListAsync();
 
@@ -68,7 +70,10 @@ namespace Application.Infra.Repository
         {
             try
             {
-                var talkToUser = await _context.TalksToUsers.FindAsync(id);
+
+                var talkToUser = await _context.TalksToUsers
+                    .Include(t => t.User)
+                    .FirstOrDefaultAsync(t => t.Id == id);
                 return talkToUser;
             }
             catch (Exception ex)

@@ -9,6 +9,7 @@ namespace Application.Domain.Service
         Task<ServiceResult<UserResponse>> GetUserById ( string id);
         Task<ServiceResult<UserResponse>> CreateUser(UserRequest data);
         Task<ServiceResult<UserResponse>> UpdateUser(UserUpdate data);
+        Task<ServiceResult<IEnumerable<UserResponse>>> GetAllUsers();
         Task<ServiceResult<UserResponse>> UpdatePhotoUser(Byte[] data,string userId);
 
 

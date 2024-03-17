@@ -39,13 +39,13 @@ namespace Application.Service
                 };
             }
 
-            talkToUser.IsArchived = true;
+            talkToUser.IsArchived = !talkToUser.IsArchived;
             var result =await _talkToUserRepository.Update(talkToUser);
 
             return new()
             {
-                Success = result == null,
-                MessageError = result == null ?string.Empty:"Fail to archived talk"
+                Success = result != null,
+                MessageError = result != null ?string.Empty:"Fail to archived talk"
             };
 
         }
@@ -62,7 +62,7 @@ namespace Application.Service
                     MessageError = $"User with id {data.IdBegin} not exists"
                 };
             }
-            var userEnd = await _userRepository.GetUserById(data.IdBegin);
+            var userEnd = await _userRepository.GetUserById(data.IdEnd);
             if (userEnd == null)
             {
                 return new()
@@ -116,8 +116,25 @@ namespace Application.Service
 
             var listToResponse = new List<TalkToUserResponse>
             {
-                new TalkToUserResponse(resultUserBegin.Id, resultUserBegin.DataCreated, resultUserBegin.IdUser, resultUserBegin.User.IdentityUser.UserName, resultUserBegin.Id, resultUserBegin.IsArchived),
-                new TalkToUserResponse(resultUserEnd.Id, resultUserEnd.DataCreated, resultUserEnd.IdUser, resultUserEnd.User.IdentityUser.UserName, resultUserEnd.Id, resultUserEnd.IsArchived)
+                new TalkToUserResponse()
+                {
+                    Id = resultUserBegin.Id,
+                    DataCreated = resultUserBegin.DataCreated,
+                    IdTalk =resultUserBegin.IdTalk,
+                    IdUser = resultUserBegin.IdUser,
+                    IsArchived=resultUserBegin.IsArchived,
+                    Username=resultUserBegin.User.Name
+                },
+                new TalkToUserResponse()
+                {
+                    Id = resultUserEnd.Id,
+                    DataCreated = resultUserEnd.DataCreated,
+                    IdTalk =resultUserEnd.IdTalk,
+                    IdUser = resultUserEnd.IdUser,
+                    IsArchived=resultUserEnd.IsArchived,
+                    Username=resultUserEnd.User.Name
+                }
+
             };
 
             return new()
@@ -193,7 +210,16 @@ namespace Application.Service
                 };
             }
 
-            var talkResponses = talkToUsers.Select(tt => new TalkToUserResponse(tt.Id, tt.DataCreated, tt.IdUser, tt.User.IdentityUser.UserName, tt.IdTalk, tt.IsArchived)).ToList();
+            var talkResponses = talkToUsers.Select(tt =>
+              new TalkToUserResponse()
+              {
+                  Id = tt.Id,
+                  DataCreated = tt.DataCreated,
+                  IdTalk = tt.IdTalk,
+                  IdUser = tt.IdUser,
+                  IsArchived = tt.IsArchived,
+                  Username = tt.User.Name
+              }).ToList();
             return new()
             {
                 Success = true,
@@ -224,7 +250,16 @@ namespace Application.Service
                 };
             }
 
-            var talkResponses = talkToUsers.Select(tt => new TalkToUserResponse(tt.Id, tt.DataCreated, tt.IdUser, tt.User.IdentityUser.UserName, tt.IdTalk, tt.IsArchived)).ToList();
+            var talkResponses = talkToUsers.Select(tt =>
+            new TalkToUserResponse()
+            {
+                Id = tt.Id,
+                DataCreated = tt.DataCreated,
+                IdTalk = tt.IdTalk,
+                IdUser = tt.IdUser,
+                IsArchived = tt.IsArchived,
+                Username = tt.User.Name
+            }).ToList();
             return new()
             {
                 Success = true,
@@ -265,7 +300,15 @@ namespace Application.Service
                 };
             }
 
-            var talkResponses = new TalkToUserResponse(tt.Id, tt.DataCreated, tt.IdUser, tt.User.IdentityUser.UserName, tt.IdTalk, tt.IsArchived);
+            var talkResponses = new TalkToUserResponse()
+            {
+                Id = tt.Id,
+                DataCreated = tt.DataCreated,
+                IdTalk = tt.IdTalk,
+                IdUser = tt.IdUser,
+                IsArchived = tt.IsArchived,
+                Username = tt.User.Name
+            };
             return new()
             {
                 Success = true,
@@ -288,7 +331,15 @@ namespace Application.Service
                 };
             }
 
-            var talkResponses = new TalkToUserResponse(tt.Id, tt.DataCreated, tt.IdUser, tt.User.IdentityUser.UserName, tt.IdTalk, tt.IsArchived);
+            var talkResponses = new TalkToUserResponse()
+            {
+                Id = tt.Id,
+                DataCreated = tt.DataCreated,
+                IdTalk = tt.IdTalk,
+                IdUser = tt.IdUser,
+                IsArchived = tt.IsArchived,
+                Username = tt.User.Name
+            };
             return new()
             {
                 Success = true,

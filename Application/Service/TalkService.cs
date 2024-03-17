@@ -33,7 +33,7 @@ namespace Application.Service
             {
                 Id = talk.Id,
                 DataCreated = talk.DataCreated,
-                TalkToUserResponses = talk.TalkToUsers.Select(tt => new TalkToUserResponse(tt.Id, tt.DataCreated, tt.IdUser, tt.User.IdentityUser.UserName, tt.IdTalk, tt.IsArchived))
+                TalkToUserResponses = talk.TalkToUsers.Select(tt => new TalkToUserResponse() { Id = tt.Id, DataCreated = tt.DataCreated, IdTalk = tt.IdTalk, IdUser = tt.IdUser, IsArchived = tt.IsArchived, Username = tt.User.Name })
             };
 
             return new()
@@ -55,7 +55,7 @@ namespace Application.Service
                 };
             }
 
-            var talks = await _talkRepository.GetTalksByUserId(user.Id);
+            var talks = await _talkRepository.GetTalksByUserId(id);
             if (talks == null || !talks.Any())
             {
                 return new ServiceResult<IEnumerable<TalkResponse>>
@@ -69,7 +69,7 @@ namespace Application.Service
             {
                 Id = talk.Id,
                 DataCreated = talk.DataCreated,
-                TalkToUserResponses = talk.TalkToUsers.Select(tt => new TalkToUserResponse(tt.Id, tt.DataCreated, tt.IdUser, tt.User.IdentityUser.UserName, tt.IdTalk, tt.IsArchived))
+                TalkToUserResponses = talk.TalkToUsers.Select(tt => new TalkToUserResponse() { Id = tt.Id, DataCreated = tt.DataCreated, IdTalk = tt.IdTalk, IdUser = tt.IdUser, IsArchived = tt.IsArchived, Username = tt.User.Name }).ToList(),
             }).ToList();
 
             return new ServiceResult<IEnumerable<TalkResponse>>

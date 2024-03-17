@@ -6,6 +6,10 @@ using Application.Domain.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http; // Adicione este namespace
+using Application.Service;
+using Application.Validators;
+using Microsoft.AspNetCore.Http.HttpResults;
+
 namespace Application.Controllers
 {
 
@@ -66,7 +70,6 @@ namespace Application.Controllers
         [HttpPost("create")]
         [Authorize]
 
-
         public async Task<IActionResult> CreateUser([FromBody] UserRequest model)
         {
             if (!ModelState.IsValid)
@@ -84,5 +87,46 @@ namespace Application.Controllers
                 return BadRequest(result);
             }
         }
+
+        [HttpGet("{id}")]
+        [Authorize]
+
+        public async Task<IActionResult> GetById(string id)
+        {
+            var validator = new ParamsIdValidator();
+            var validationResult = validator.Validate(id);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var result = await _userService.GetUserById(id);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return NotFound(result.MessageError);
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+
+        public async Task<IActionResult> GetAll()
+        {
+            var users =await _userService.GetAllUsers();
+            if (users.Success)
+            {
+                return Ok(users.Data);
+            }
+            else
+            {
+                return BadRequest();
+            };
+        }
+
     }
 }

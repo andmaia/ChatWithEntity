@@ -2,6 +2,10 @@
 {
     public class Message
     {
+        public Message()
+        {
+        }
+
         public Message(string id, string? text, DateTime dateCreate, DateTime dateUpdate, DateTime dateFinished, bool isActive, byte[]? file, string userId, string talkId, string talkToUserId)
         {
             Id = id;
@@ -27,7 +31,7 @@
         public User User { get; set; }
         public string UserId { get; set; }
 
-        public Task Talk { get; set; }
+        public Talk Talk { get; set; }
         public string TalkId { get; set; }
         
         public IEnumerable<MessageTallkToUser> MessageTallkToUsers { get; set; }

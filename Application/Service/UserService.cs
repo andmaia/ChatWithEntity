@@ -1,8 +1,10 @@
-﻿using Application.Crosscuting.DTO.User;
+﻿using Application.Crosscuting.DTO.TalkToUser;
+using Application.Crosscuting.DTO.User;
 using Application.Crosscuting.Helpers;
 using Application.Domain.Entity;
 using Application.Domain.Repository;
 using Application.Domain.Service;
+using Application.Infra.Repository;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Application.Service
@@ -55,6 +57,34 @@ namespace Application.Service
             {
                 Data = userResponse,
                 Success = true
+            };
+        }
+
+        public async Task<ServiceResult<IEnumerable<UserResponse>>> GetAllUsers()
+        {
+            var users = await _userRepository.GetAllUsers();
+            if (users == null || !users.Any())
+            {
+                return new()
+                {
+                    Success = true,
+                    Data = Enumerable.Empty<UserResponse>(),
+                };
+            }
+
+            var usersResponses = users.Select(tt =>
+            new UserResponse()
+            {
+                Id = tt.Id,
+                Name = tt.Name,
+                DataCreated = tt.DataCreated,
+                IsActive=tt.IsActive,
+            }
+            ).ToList();
+            return new()
+            {
+                Success = true,
+                Data = usersResponses
             };
         }
 

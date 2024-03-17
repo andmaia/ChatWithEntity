@@ -29,6 +29,12 @@ builder.Services.AddScoped<IUserCredentialsService, UserCredentialsService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITalkRepository, TalkRepository>();
+builder.Services.AddScoped<ITalkToUserRepository, TalkToUserRepository>();
+builder.Services.AddScoped<IMessageTalkToUserRepository, MessageTalkToUserRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<ITalkService, TalkService>();
+builder.Services.AddScoped<ITalkToUserService, TalkToUserService>();
+builder.Services.AddScoped<IMessageService,MessageService>();
 builder.Services.AddScoped<SignInManager<IdentityUser>>();
 builder.Services.AddScoped<TokenService>();
 

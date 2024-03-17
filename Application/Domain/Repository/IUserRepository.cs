@@ -7,5 +7,6 @@ namespace Application.Domain.Repository
         Task<User> CreateUser(User data);
         Task<User> UpdateUser(User data);
         Task<User> GetUserById(string id);
+        Task<IEnumerable<User>> GetAllUsers();
     }
 }

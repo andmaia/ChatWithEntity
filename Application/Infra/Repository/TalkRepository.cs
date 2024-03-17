@@ -36,8 +36,10 @@ namespace Application.Infra.Repository
             try
             {
                 var talks = await _context.Talks
-                    .Where(t => t.TalkToUsers.Any(tu => tu.IdUser == id))
-                    .ToListAsync();
+         .Include(t => t.TalkToUsers)
+             .ThenInclude(tu => tu.User) // Inclui a propriedade User de TalkToUsers
+         .Where(t => t.TalkToUsers.Any(tu => tu.IdUser == id))
+         .ToListAsync();
 
                 return talks;
             }
@@ -51,11 +53,14 @@ namespace Application.Infra.Repository
         {
             try
             {
-                var talk = await _context.Talks.FindAsync(id);
+                var talk = await _context.Talks
+                      .Include(t => t.TalkToUsers)
+                      .ThenInclude(tu => tu.User) 
+                        .FirstOrDefaultAsync(x => x.Id == id);
                 return talk;
             }
             catch (Exception ex)
-            {
+           {
                 throw new RepositoryException("Error getting talk by ID.", ex);
             }
         }

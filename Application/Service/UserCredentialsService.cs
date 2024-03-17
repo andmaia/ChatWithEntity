@@ -18,6 +18,17 @@ namespace Application.Service
         }
         public async Task<ServiceResult<IdentityResult>> CreateUserAsync(UserCredentialsRequest data)
         {
+            var emailVerification = await _userCredentialsRepository.FindByEmailAsync(data.Email);
+            if (emailVerification != null)
+            {
+                return new()
+                {
+                    Success = false,
+                    Data = IdentityResult.Failed(new IdentityError { Description = "Email já pertence a um usuário" })
+                };
+            }
+
+
             if (!PasswordMatchesConfirmation(data.Password, data.PasswordConfirmation))
             {
                 return new()
