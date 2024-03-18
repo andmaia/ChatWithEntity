@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+       MYSQL_ROOT_PASSWORD: 'andrew71'
+       MYSQL_DATABASE: 'chatdb'
+
+    ports:
+      - "3307:3306"
+    networks:
+      - chat_network
+
+  chat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5670:80"
+    depends_on:
+      - mysql
+    networks:
+      - chat_network
+
+networks:
+  chat_network:
+    driver: bridge

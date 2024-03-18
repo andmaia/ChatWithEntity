@@ -19,6 +19,7 @@ using Application.Validators;
 using FluentValidation.AspNetCore;
 using Application.Infra.Repository;
 using Application.Crosscuting.Middlewares;
+using Application.WebSocket;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -37,7 +38,7 @@ builder.Services.AddScoped<ITalkToUserService, TalkToUserService>();
 builder.Services.AddScoped<IMessageService,MessageService>();
 builder.Services.AddScoped<SignInManager<IdentityUser>>();
 builder.Services.AddScoped<TokenService>();
-
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 
 
@@ -117,7 +118,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-
+app.MapHub<ChatHub>("chat-hub");
 
 
 if (app.Environment.IsDevelopment())
