@@ -112,6 +112,30 @@ namespace Application.Controllers
             }
         }
 
+
+        [HttpGet("{id}/credentials")]
+        [Authorize]
+        public async Task<IActionResult> GetByIdCredentials(string id)
+        {
+            var validator = new ParamsIdValidator();
+            var validationResult = validator.Validate(id);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var result = await _userService.GetUserByCredentialsId(id);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return NotFound(result.MessageError);
+            }
+        }
+
         [HttpGet]
         [Authorize]
 

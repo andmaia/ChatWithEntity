@@ -10,11 +10,13 @@ namespace Application.Service
     {
         private readonly IUserCredentialsRepository _userCredentialsRepository;
         private readonly TokenService _tokenService;
+        private readonly IUserRepository _userRepository;
 
-        public UserCredentialsService(IUserCredentialsRepository userCredentialsRepository, TokenService tokenService)
+        public UserCredentialsService(IUserCredentialsRepository userCredentialsRepository, TokenService tokenService, IUserRepository userRepository)
         {
             _userCredentialsRepository = userCredentialsRepository;
             _tokenService = tokenService;
+            _userRepository = userRepository;
         }
         public async Task<ServiceResult<IdentityResult>> CreateUserAsync(UserCredentialsRequest data)
         {
@@ -24,7 +26,8 @@ namespace Application.Service
                 return new()
                 {
                     Success = false,
-                    Data = IdentityResult.Failed(new IdentityError { Description = "Email já pertence a um usuário" })
+                    Data = IdentityResult.Failed(new IdentityError { Code = "DuplicateEmail", Description = "Email já pertence a um usuário" })
+
                 };
             }
 
@@ -34,7 +37,7 @@ namespace Application.Service
                 return new()
                 {
                     Success =false,
-                    Data = IdentityResult.Failed(new IdentityError { Description = "As senhas não coincidem." })
+                    Data = IdentityResult.Failed(new IdentityError { Code = "PasswordNotMatch", Description = "As senhas não coincidem." })
                  };
             }
 
@@ -54,7 +57,7 @@ namespace Application.Service
             };
         }
 
-        public async Task<ServiceResult<string>> LoginUserAsync(UserCredentialsLogin data)
+        public async Task<ServiceResult<UserLoginResponse>> LoginUserAsync(UserCredentialsLogin data)
         {
            
             var user = await _userCredentialsRepository.FindByEmailAsync(data.Email);
@@ -62,7 +65,7 @@ namespace Application.Service
             if (user == null)
             {
                 return new()
-                {
+                {   
                     Success = false,
                     MessageError = "Email não pertence a um usuário."
                 };
@@ -72,11 +75,17 @@ namespace Application.Service
 
             if (loginResult.Succeeded)
             {
-                var token = _tokenService.GenerateToken(user);
-               return new()
+               var token = _tokenService.GenerateToken(user);
+
+
+                return new()
                 {
                     Success = true,
-                    Data = token
+                    Data = new UserLoginResponse
+                    {
+                        Token = token,
+                        UserCredentialsResponse = new UserCredentialsResponse(user.Id,user.Email)
+                    }
                 };
             }
             else

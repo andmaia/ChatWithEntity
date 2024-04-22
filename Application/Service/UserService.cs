@@ -117,6 +117,35 @@ namespace Application.Service
 
         }
 
+        public async Task<ServiceResult<UserResponse>> GetUserByCredentialsId(string id)
+        {
+            var result = await _userRepository.GetByUserIdCredentials(id);
+            if (result == null)
+            {
+                return new()
+                {
+                    Success = false,
+                    MessageError = "Usuário não existe"
+                };
+            }
+            UserResponse userResponse = new()
+            {
+                Id = result.Id,
+                Name = result.Name,
+                DataCreated = result.DataCreated,
+                IsActive = result.IsActive,
+                PhotoUser = result.PhotoUser,
+            };
+
+
+            return new()
+            {
+                Data = userResponse,
+                Success = true
+            };
+
+        }
+
         public async Task<ServiceResult<UserResponse>> UpdatePhotoUser(byte[] data, string userId)
         {
             var user = await _userRepository.GetUserById(userId);

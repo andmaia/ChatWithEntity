@@ -8,7 +8,8 @@ namespace Application.Domain.Service
     {
         Task<ServiceResult<IdentityResult>> CreateUserAsync(UserCredentialsRequest data);
 
-        Task<ServiceResult<string>> LoginUserAsync(UserCredentialsLogin data);
+        Task<ServiceResult<UserLoginResponse>> LoginUserAsync(UserCredentialsLogin data);
+
 
 
     }

@@ -5,8 +5,8 @@ services:
     image: mysql:latest
     restart: always
     environment:
-       MYSQL_ROOT_PASSWORD: 'andrew71'
-       MYSQL_DATABASE: 'chatdb'
+       MYSQL_ROOT_PASSWORD: ''
+       MYSQL_DATABASE: ''
 
     ports:
       - "3307:3306"

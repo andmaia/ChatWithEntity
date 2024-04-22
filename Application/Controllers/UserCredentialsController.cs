@@ -12,7 +12,7 @@ namespace Application.Controllers
     {
         private readonly IUserCredentialsService _userCredentialsService;
         private readonly SignInManager<IdentityUser> _signInManager;
-
+       
         public UserCredentialsController(IUserCredentialsService userCredentialsService, SignInManager<IdentityUser> signInManager)
         {
             _userCredentialsService = userCredentialsService;
@@ -32,11 +32,11 @@ namespace Application.Controllers
 
             if (result.Success)
             {
-                return Ok(result);
+                return Ok(new {result.Success});
             }
             else
             {
-                return BadRequest(result);
+             return BadRequest(new {result.Success ,result.Data.Errors, result.MessageError });
             }
         }
 
@@ -48,11 +48,11 @@ namespace Application.Controllers
 
             if (result.Success)
             {
-                return Ok(new { Token = result.Data });
+                return Ok(result);
             }
             else
             {
-                return BadRequest(new { Message = result.MessageError });
+                return BadRequest(result);
             }
         }
 
@@ -60,8 +60,8 @@ namespace Application.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync(); // Faz logout do usuário
-            return Ok(); // Retorna um código de status 200 (OK)
+            await _signInManager.SignOutAsync(); 
+            return Ok(); 
         }
 
 

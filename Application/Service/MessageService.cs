@@ -66,8 +66,18 @@ namespace Application.Service
 
             var result = await _messageRepository.Create(message);
 
+            MessageResponse messageResponse = new MessageResponse()
+            {
+                Id = message.Id,
+                DateCreate = message.DateCreate,
+                TalkId = message.TalkId,
+                Text = message.Text,
+                UserId = message.UserId,
+            };
+
             return new()
             {
+                Data = messageResponse,
                 Success = result
             };
 

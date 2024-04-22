@@ -79,5 +79,18 @@ namespace Application.Infra.Repository
                 throw new RepositoryException("Error updating user.", ex);
             }
         }
+
+        public async Task<User> GetByUserIdCredentials(string id)
+        {
+            try
+            {
+                var result = await _context.User.FirstOrDefaultAsync(u=>u.IdentityUser.Id==id);
+                return result;
+            }
+            catch (Exception ex) when (ex is InvalidOperationException || ex is ArgumentException)
+            {
+                throw new RepositoryException("Error getting user by ID.", ex);
+            }
+        }
     }
 }

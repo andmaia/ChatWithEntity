@@ -9,7 +9,7 @@ namespace Application.Validators
         {
             RuleFor(x => x.Username)
                 .NotEmpty().WithMessage("O nome de usuário é obrigatório.")
-                .MaximumLength(8).WithMessage("O nome de usuário deve ter no máximo 8 caracteres.");
+                .MaximumLength(14).WithMessage("O nome de usuário deve ter no máximo 14 caracteres.");
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("O email é obrigatório.")
