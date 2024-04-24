@@ -8,8 +8,7 @@ namespace Application.Domain.Repository
         Task<Message> GetById (string  id);
         Task<IEnumerable<Message>> GetAllbyTalkAndUser(string talkId,string userId);
         Task<IEnumerable<Message>> GetAllbyTalk(string talkId);
-
         Task<IEnumerable<Message>> GetAllbyTalkToUserId(string userId);
-
+        Task<Message> GetLastMessage(string idTalk);
     }
 }

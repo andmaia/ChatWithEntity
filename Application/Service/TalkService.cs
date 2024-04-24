@@ -1,4 +1,5 @@
-﻿using Application.Crosscuting.DTO.Talk;
+﻿using Application.Crosscuting.DTO.Message;
+using Application.Crosscuting.DTO.Talk;
 using Application.Crosscuting.DTO.TalkToUser;
 using Application.Crosscuting.Helpers;
 using Application.Domain.Repository;
@@ -10,11 +11,13 @@ namespace Application.Service
     {
         private readonly ITalkRepository _talkRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMessageRepository _messageRepository;
 
-        public TalkService(ITalkRepository talkRepository, IUserRepository userRepository)
+        public TalkService(ITalkRepository talkRepository, IUserRepository userRepository, IMessageRepository messageRepository)
         {
             _talkRepository = talkRepository;
             _userRepository = userRepository;
+            _messageRepository = messageRepository;
         }
 
         public async Task<ServiceResult<TalkResponse>> GetTalkById(string id)
@@ -65,12 +68,32 @@ namespace Application.Service
                 };
             }
 
-            var talkResponses = talks.Select(talk => new TalkResponse
+
+            var talkResponses = new List<TalkResponse>();
+
+            foreach (var talk in talks)
             {
-                Id = talk.Id,
-                DataCreated = talk.DataCreated,
-                TalkToUserResponses = talk.TalkToUsers.Select(tt => new TalkToUserResponse() { Id = tt.Id, DataCreated = tt.DataCreated, IdTalk = tt.IdTalk, IdUser = tt.IdUser, IsArchived = tt.IsArchived, Username = tt.User.Name }).ToList(),
-            }).ToList();
+                var lastMessage = await _messageRepository.GetLastMessage(talk.Id);
+                var lastMessageResponse = lastMessage != null ? new MessageResponse(lastMessage.Id, lastMessage.Text, lastMessage.DateCreate, lastMessage.UserId, lastMessage.TalkId) : null;
+
+                var talkResponse = new TalkResponse
+                {
+                    Id = talk.Id,
+                    DataCreated = talk.DataCreated,
+                    TalkToUserResponses = talk.TalkToUsers.Select(tt => new TalkToUserResponse
+                    {
+                        Id = tt.Id,
+                        DataCreated = tt.DataCreated,
+                        IdTalk = tt.IdTalk,
+                        IdUser = tt.IdUser,
+                        IsArchived = tt.IsArchived,
+                        Username = tt.User.Name,
+                        LastMessage = lastMessageResponse
+                    }).ToList()
+                };
+
+                talkResponses.Add(talkResponse);
+            }
 
             return new ServiceResult<IEnumerable<TalkResponse>>
             {

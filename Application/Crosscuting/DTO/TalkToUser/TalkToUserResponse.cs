@@ -37,6 +37,7 @@ namespace Application.Crosscuting.DTO.TalkToUser
         public string? Username { get; set; }   
         public string? IdTalk { get; set; }
         public bool? IsArchived { get; set; }
+        public MessageResponse? LastMessage { get; set; }
 
     }
 }

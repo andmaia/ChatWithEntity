@@ -92,5 +92,22 @@ namespace Application.Infra.Repository
                 throw new RepositoryException("Error getting Message by ID.", ex);
             }
         }
+
+        public async Task<Message> GetLastMessage(string idTalk)
+        {
+            try
+            {
+                var lastMessage = await _context.Messages
+                    .Where(m => m.TalkId == idTalk)
+                    .OrderByDescending(m => m.DateCreate)
+                    .FirstOrDefaultAsync();
+
+                return lastMessage;
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error getting last message by conversation ID.", ex);
+            }
+        }
     }
 }
